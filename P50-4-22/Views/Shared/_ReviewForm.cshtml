@@ -1,0 +1,23 @@
+﻿<html>
+@model P50_4_22.Models.Review
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form asp-action="AddReview" method="post" class="text">
+        <input type="hidden" name="CatalogroductId" value="@ViewData["ProductId"]" />
+
+        <label>Рейтинг:</label>
+        <select name="Rating">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <option value="@i">@i ⭐</option>
+            }
+        </select>
+
+        <label>Отзыв:</label>
+        <textarea name="ReviewText" required></textarea>
+
+        <button type="submit">Оставить отзыв</button>
+    </form>
+}
+</html>
