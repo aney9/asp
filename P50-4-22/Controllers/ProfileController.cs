@@ -36,7 +36,8 @@ namespace P50_4_22.Controllers
 				{
 					new Claim(ClaimTypes.Name, user.ClientName),
 					new Claim(ClaimTypes.Email, user.Email),
-					new Claim(ClaimTypes.NameIdentifier, user.IdUsers.ToString())
+					new Claim(ClaimTypes.NameIdentifier, user.IdUsers.ToString()),
+					new Claim(ClaimTypes.Role, user.RolesId == 2 ? "пользователь" : "админ")
 				};
 
 				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -74,7 +75,8 @@ namespace P50_4_22.Controllers
 				Loginpassword = hashedPassword,
 				PhoneNumber = PhoneNumber,
 				Email = Email,
-				ClientName = ClientName
+				ClientName = ClientName, 
+				RolesId = 2
             };
 			db.Users.Add(user);
 			await db.SaveChangesAsync();
@@ -90,6 +92,12 @@ namespace P50_4_22.Controllers
 				var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
 				return BitConverter.ToString(hashedBytes).Replace("-", "-").ToLower();
 			}
+		}
+
+		public async Task<IActionResult> Logout()
+		{
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			return RedirectToAction("Profile", "Profile");
 		}
 
 
